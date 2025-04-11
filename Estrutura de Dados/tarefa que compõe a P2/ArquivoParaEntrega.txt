@@ -1,0 +1,588 @@
+Nome:
+Marco Antonio da Silva Oliveira
+
+
+PARTE 1
+
+
+public class Fila {
+    private No primeiro;
+    private No ultimo;
+    //construtor padrão
+    //getters e setters, NEM PENSAR
+    public boolean filaVazia () {
+        return primeiro==null;
+    }
+    public void enfileira (Pessoa p) {
+        No novo = new No(p);
+        if (filaVazia())
+            primeiro=novo;
+        else 
+            ultimo.setProximo(novo);
+        ultimo = novo;
+    }
+    public Pessoa desenfileira (){
+        if (filaVazia()) return null;
+        Pessoa p = primeiro.getInfo();
+        primeiro = primeiro.getProximo();
+        if (filaVazia()) ultimo = null;
+        return p;
+    }
+    @Override
+    public String toString() {
+        if (filaVazia()) return "fila vazia";
+        No aux = primeiro;
+        String s = "";
+        while (aux != null) {
+            s += aux + " ";
+            aux = aux.getProximo();            
+        }
+        return s;
+    }
+    public Pessoa getFirst () {
+        if (filaVazia()) return null;
+        return primeiro.getInfo();
+    }
+    public Pessoa getLast () {
+        if (filaVazia()) return null;
+        return ultimo.getInfo();
+    }
+
+    //Parte I Exercício 1
+    public static Fila mergeQueue(Fila fila1, Fila fila2){
+        Fila filaFinal = new Fila();
+
+        while (!fila1.filaVazia() || !fila2.filaVazia()){
+            if (!fila1.filaVazia()){
+                filaFinal.enfileira(fila1.desenfileira());
+            }
+            if (!fila2.filaVazia()){
+                filaFinal.enfileira(fila2.desenfileira());
+            }
+        }
+        
+        fila1 = null;
+        fila2 = null;
+        return filaFinal;
+    }
+
+}
+
+
+public class No {
+    private Pessoa info;
+    private No proximo;
+    public No(Pessoa info) {
+        this.info = info;
+    }
+    public Pessoa getInfo() {
+        return info;
+    }
+    public No getProximo() {
+        return proximo;
+    }
+    public void setProximo(No proximo) {
+        this.proximo = proximo;
+    }
+    @Override
+    public String toString() {
+        return "[" + info + "]";
+    }
+
+    
+}
+
+
+
+public class Pessoa {
+    private String nome;
+    private int anoNascimento;
+    //private Pessoa bff;
+    //private Pessoa[] amigos;
+    
+    public Pessoa() {
+    }
+
+    public Pessoa(String nome, int anoNascimento) {
+        this.nome = nome;
+        this.anoNascimento = anoNascimento;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public int getAoNascimento() {
+        return anoNascimento;
+    }
+
+    public void setAnoNascimento(int anoNascimento) {
+        this.anoNascimento = anoNascimento;
+    }
+
+    @Override
+    public String toString() {
+        //return "nome=" + nome + ", anoNascimento=" + anoNascimento + "]";
+        return nome;
+    }
+    
+    
+}
+
+
+
+
+public class Pilha {
+    private Pessoa[] dados;
+    private int topo;
+    private int capacidade;
+    
+    public Pilha(int capacidade) {
+        dados = new Pessoa[capacidade];
+        topo = 0;
+        this.capacidade = capacidade;
+    } 
+    
+    public Pilha() {
+        this(10);
+    }
+
+    public boolean estaVazia() {
+        return topo == 0;
+    }
+
+    public boolean estaCheia() {
+        return topo == capacidade;
+    }
+
+    public int getTamanho() {
+        return topo;
+    }
+
+    public Pessoa peek() {
+        return dados[topo-1];
+    }
+
+    public void push(Pessoa valor) {
+        // dados[topo] = valor;
+        // topo++;
+        dados[topo++] = valor;
+    }
+
+    public Pessoa pop() {
+        topo--; // topo está adiantado, por isso eu primeiro decremento.
+        return dados[topo];
+    }
+
+    public String toString() {
+        String s = "";
+        if(estaVazia()) {
+            s += "pilha vazia\n";
+        } else { 
+            for (int i = topo-1; i>=0 ;i--) {
+                s += dados[i] + "\n";
+            }
+        }
+        return s + "------------";        
+    }
+}
+
+
+
+
+public class TesteParte1{
+    public static void main(String[] args) {
+        Pessoa a1 = new Pessoa("A1", 0);
+        Pessoa a2 = new Pessoa("A2", 5);
+        Pessoa a3 = new Pessoa("A3", 10);
+        Pessoa b1 = new Pessoa("B1", 0);
+        Pessoa b2 = new Pessoa("B2", 5);
+        Pessoa b3 = new Pessoa("B3", 10);
+        Fila f1 = new Fila();
+        f1.enfileira(a1);
+        f1.enfileira(a2);
+        f1.enfileira(a3);
+        
+        Fila f2 = new Fila();
+        f2.enfileira(b1);
+        f2.enfileira(b2);
+        f2.enfileira(b3);
+
+        System.out.println("Teste do merge");
+        System.out.println("Fila 1: " + f1);
+        System.out.println("Fila 2: " + f2);
+
+        System.out.println("================");
+        System.out.println("Depois do merge");
+        Fila f3 = new Fila();
+        f3 = f3.mergeQueue(f1, f2);
+        System.out.println(f3);
+
+
+        System.out.println("============");
+        System.out.println("Teste do findElement");
+        Pilha p = new Pilha();
+        p.push(b3);
+        p.push(b2);
+        p.push(a2);
+        p.push(a1);
+        p.push(a3);
+        System.out.println("Pilha: " + p);
+        System.out.println("Elemento a ser encontrado: " + a1);
+        System.out.println("Posicao do elemento: " + findElement(p, a1));
+    }
+
+    //Parte I Exercício 2
+    public static int findElement(Pilha p, Pessoa x){
+        boolean found = false;
+        int position = 0;
+        Fila f = new Fila();
+
+        while (!p.estaVazia() && !found){
+            position++;
+            Pessoa element = p.pop();
+            f.enfileira(element);
+            if (element == x){
+                found = true;
+                while (!f.filaVazia()){
+                    p.push(f.desenfileira());
+                }
+            }
+        }
+        
+        if (found){
+            return position;
+        }
+        else{
+            return -1;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PARTE 2
+
+
+import java.util.List;
+
+public class ListaSimples {
+    private No primeiro;
+
+    public ListaSimples(){
+        primeiro = null;
+    }
+    
+    public boolean listaVazia(){
+        return primeiro == null;
+    }
+
+    public void insereInicio(int i){
+        No novo = new No(i);
+
+        if (!listaVazia()){
+            novo.setProximo(primeiro);
+        }
+
+        primeiro = novo;
+    }
+
+    @Override
+    public String toString(){
+        String s = "lista: ";
+        if (listaVazia()){
+            s += "vazia";
+        }
+        else{
+            No aux = primeiro;
+            while (aux != null){
+                s += aux + " ";
+                aux = aux.getProximo();
+            }
+        }
+
+        return s;
+    }
+
+    public void insereFim(int i){
+        No novo = new No(i);
+        if (listaVazia()){
+            primeiro = novo;
+        }
+        else{
+            No aux = primeiro;
+            while (aux.getProximo() != null){
+                aux = aux.getProximo();
+            }
+            aux.setProximo(novo);
+        }
+    }
+
+    public int contaElementos(){
+        int conta = 0;
+        if (!listaVazia()){
+            No aux = primeiro;
+            while (aux != null){
+                aux = aux.getProximo();
+                conta++;
+            }
+        }
+        return conta;
+    }
+
+    public int contaPares(){
+        int conta = 0;
+        if (!listaVazia()){
+            No aux = primeiro;
+            while (aux != null){
+                if (aux.getInfo() % 2 == 0){
+                    conta++;
+                }
+                aux = aux.getProximo();
+            }
+        }
+        return conta;
+    }
+
+    public int somaElementos(){
+        int conta = 0;
+        if (!listaVazia()){
+            No aux = primeiro;
+            while (aux != null){
+                conta += aux.getInfo();
+                aux = aux.getProximo();
+            }
+        }
+        return conta;
+    }
+
+    public int maiorElemento(){
+        int maior = 0;
+        if (!listaVazia()){
+            No aux = primeiro;
+            maior = aux.getInfo();
+            while (aux != null){
+                if (aux.getInfo() > maior){
+                    maior = aux.getInfo();
+                }
+                aux = aux.getProximo();
+            }
+        }
+        return maior;
+    }
+
+    public int posicaoMaiorElemento(){
+        int posicao = 1, posicaoAux = 1, maior = 0;
+        if (!listaVazia()){
+            No aux = primeiro;
+            maior = aux.getInfo();
+            while (aux != null){
+                if (aux.getInfo() > maior){
+                    maior = aux.getInfo();
+                    posicao = posicaoAux;
+                }
+                posicaoAux++;
+                aux = aux.getProximo();
+            }
+        }
+        return posicao;
+    }
+
+    public No getNoFinal(){
+        if (listaVazia()){
+            return null;
+        }
+        else{
+            No aux = primeiro;
+            while (aux.getProximo() != null){
+                aux = aux.getProximo();
+            }
+            return aux;
+        }
+    }
+
+    public static ListaSimples appendLista(ListaSimples l1, ListaSimples l2){
+        l1.getNoFinal().setProximo(l2.primeiro);
+        return l1;
+    }
+
+    public static boolean listasIguais(ListaSimples l1, ListaSimples l2){
+        int size = l2.contaElementos();
+        if (l1.contaElementos() == size){
+            No auxL1 = l1.primeiro;
+            No auxL2 = l2.primeiro;
+            while (size > 0){
+                if (auxL1.getInfo() != auxL2.getInfo()){
+                    return false;
+                }
+                auxL1 = auxL1.getProximo();
+                auxL2 = auxL2.getProximo();
+
+                size--;
+            }
+        }
+        else{
+            return false;
+        }
+        return true;
+    }
+
+    public No popPrimeiro(){
+        No no = primeiro;
+        primeiro = primeiro.getProximo();
+        return no;
+    }
+
+    //Parte II Exercício 1
+    public static ListaSimples inverteLista(ListaSimples l){
+        int originalSize = l.contaElementos();
+        int size = 0;
+        ListaSimples l2 = new ListaSimples();
+        while (size < originalSize){
+            l2.insereInicio(l.popPrimeiro().getInfo());
+            size++;
+        }
+
+        l = l2;
+
+        return l;
+    }
+
+    //Parte II Exercício 2
+    public ListaSimples[] divideLista(ListaSimples l1){
+        ListaSimples l2 = new ListaSimples();
+        ListaSimples[] listas = new ListaSimples[2];
+        listas[1] = l1;
+        listas[0] = l2;
+
+        int originalSize = l1.contaElementos();
+        int half = originalSize / 2;
+
+        while (half > 0){
+            l2.insereFim(l1.popPrimeiro().getInfo());
+            half--;
+        }
+
+        return listas;
+    }
+
+    //Parte II Exercício 3
+    public void esvaziaLista(ListaSimples l){
+        while (!l.listaVazia()){
+            l.popPrimeiro();
+        }
+    }
+
+    //Parte II Exercício 4
+    public int contaOcorrencias(int x){
+        int size = this.contaElementos();
+        int counter = 0;
+
+        No curr = primeiro;
+        while (size > 0){
+            size--;
+            if (curr.getInfo() == x){
+                counter++;
+            }
+            curr = curr.getProximo();
+        }
+
+        return counter;
+    }
+}
+
+
+
+
+
+public class No {
+    private int info;
+    private No proximo;
+
+    public No(int newInfo){
+        setInfo(newInfo);
+        setProximo(null);
+    }
+
+    public int getInfo(){
+        return info;
+    }
+
+    public void setInfo(int newInfo){
+        info = newInfo;
+    }
+
+    public No getProximo(){
+        return proximo;
+    }
+
+    public void setProximo(No newProximo){
+        proximo = newProximo;
+    }
+
+    @Override
+    public String toString(){
+        return info + "";
+    }
+}
+
+
+
+
+
+public class TesteParte2 {
+    public static void main(String[] args) {
+        ListaSimples l1 = new ListaSimples();
+        l1.insereInicio(3);
+        l1.insereInicio(2);
+        l1.insereInicio(1);
+        System.out.println("Lista inicial: " + l1);
+        l1 = l1.inverteLista(l1);
+        System.out.println("Lista invertida: " + l1);
+
+
+        System.out.println("==========");
+        System.out.println("Teste de split das listas");
+        l1.insereInicio(4);
+        System.out.println("Lista inicial: " + l1);
+        ListaSimples[] listas = new ListaSimples[2];
+        listas = l1.divideLista(l1);
+        System.out.println("Lista 1: " + listas[0]);
+        System.out.println("Lista 2: " + listas[1]);
+
+        System.out.println("========");
+        System.out.println("Teste de contaOcorrencias");
+        l1.insereInicio(1);
+        System.out.println("Lista inicial: " + l1);
+        int valor = 1;
+        System.out.println("Busca o elemento: " + valor);
+        System.out.println("Numero de ocorrencias: " + l1.contaOcorrencias(valor));
+
+        System.out.println("==========");
+        System.out.println("Teste esvaziaLista");
+        System.out.println("Lista inicial: " + l1);
+        l1.esvaziaLista(l1);
+        System.out.println("Lista esvaziada: " + l1);
+    }
+}
+
+
+
+
+

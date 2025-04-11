@@ -1,0 +1,10 @@
+Exercícios
+
+1. Criar um método para cada uma das tarefas a seguir (dentro da classe Lista)
+    1.1 contar quantos elementos tem na Lista
+    1.2 contar quantos pares tem na Lista
+    1.3 somar os elementos da Lista
+    1.4 encontrar o maior elemento da Lista
+    1.5 encontrar a posicao do maior na lista, considerando o primeiro na posição 1
+    1.6 fazer o append de uma lista l2 em uma lista l1
+    1.7 dizer se duas listas são iguais
